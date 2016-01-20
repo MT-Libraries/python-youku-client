@@ -4,6 +4,16 @@ python版本优酷客户端 & Gearman Worker
 
 基于Gearman的任务队列Worker,负责接收到任务后下载阿里云OSS文件并上传到使用优酷SDK来上传视频到优酷
 
+## Required
+
+- Gearman
+- oss2
+
+```
+pip install oss2
+pip install gearman
+```
+
 ## Conf
 
 修改conf目录下的conf_*.sample.py为对应conf_*.py并填写相应参数
