@@ -7,6 +7,8 @@ Gearman Worker for Youku Upload (Python 2.7)
 
 import os
 import json
+import md5
+import time
 import gearman
 import aliyun.oss as aliyun_oss
 import conf.conf_oss as oss_conf
@@ -14,12 +16,27 @@ import conf.conf_gearman as gearman_conf
 from youku import YoukuUpload
 from youku.util import check_error, YoukuError
 
-gm_worker = gearman.GearmanWorker([gearman_conf.JOB_SERVER])
+
+def get_id():
+    """
+    Generate md5 string as worker id
+    Returns:
+        STRING
+    """
+    _now = str(time.time())
+    _md5 = md5.new()
+    _md5.update(_now)
+    return _md5.hexdigest()
 
 
 def remove_tmp(local_key_name):
     """
     Remove tmp file and throw OSError
+    Args:
+        local_key_name:
+
+    Returns:
+        NONE
     """
     try:
         # abs_path = os.path.abspath('.')
@@ -84,10 +101,14 @@ def task_listener_upload(gearman_worker, gearman_job):
         result_youku = youku_task(youku_conf, youku_upload, local_key_name)
         return json.dumps(result_youku, indent=4)
 
-    # gm_worker.set_client_id is optional
 
+# init gm_worker
+gm_worker = gearman.GearmanWorker([gearman_conf.JOB_SERVER])
 
-gm_worker.set_client_id('python-worker')
+# gm_worker.set_client_id is optional
+gm_worker.set_client_id('python-worker-'+get_id())
+
+# add def for gm_worker to listen
 gm_worker.register_task('upload', task_listener_upload)
 
 # Enter our work loop and call gm_worker.after_poll() after each time we timeout/see socket activity
