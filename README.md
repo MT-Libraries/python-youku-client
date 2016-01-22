@@ -41,9 +41,12 @@ python client.py
 
 ```
 var info = {
-    "clientid" : "0a54dd48sssa79beae8",
-    "ak" : "5629915b34fd7eda7fd8747fb712b08e73e8f",
-    "keyname": "00d64e1ffdf7701c62b5bffa61ff23303ca5961",
+    "conf":{
+        "clientid" : "0a54dd48sssa79beae8",
+        "ak" : "5629915b34ffdsd7eda7fd8747fb712b08e73e8f",
+        "keyname": "00d64e1ffdf7701c62b5bffa61ff23303ca5961",
+        "callbackurl":"http://your.domain"
+    },
     "youku":{
         "title": "优酷合作测试视频",
         "tags": "other",
