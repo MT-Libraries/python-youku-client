@@ -57,15 +57,16 @@ def youku_task(youku_conf, youku_upload, local_key_name):
 
     youku = YoukuUpload(youku_conf["clientid"], youku_conf["ak"], local_key_name)
     try:
+        video_id = youku.upload(youku_upload)
         YOUKU_SUCCESS = {
             "code": "200",
             "msg": "upload success",
             "data": {
                 "callbackurl": youku_conf["callbackurl"],
-                "key": local_key_name
+                "key": local_key_name,
+                "videoid": str(video_id)
             }
         }
-        youku.upload(youku_upload)
         remove_tmp(local_key_name)
         return YOUKU_SUCCESS
 

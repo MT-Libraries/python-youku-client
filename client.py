@@ -19,7 +19,7 @@ def main():
     def upload():
 
         file_info = {
-            'title': u'测试优酷Python客户端上传',
+            'title': u'优酷合作测试-VID',
             'tags': 'other',
             'description': 'Polymer video #7'
             # 'category': 'Tech'
@@ -36,7 +36,8 @@ def main():
         # youku.spec()
 
         try:
-            youku.upload(file_info)
+            vid = youku.upload(file_info)
+            print vid
         except YoukuError, e:
             print e
 
