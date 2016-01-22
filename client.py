@@ -40,7 +40,7 @@ def main():
         except YoukuError, e:
             print e
 
-    # download()
+    download()
     upload()
 
 

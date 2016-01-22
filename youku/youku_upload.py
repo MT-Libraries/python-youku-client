@@ -44,6 +44,9 @@ class YoukuUpload(object):
         self.file_ext = self.file_name.rsplit('.', 1)[1],  # file extension
         self.file_md5 = None  # string, do later
 
+        # Panorama
+        self.panorama = 1
+
         # upload state
         self.upload_token = None  # string
         self.upload_server_ip = None  # string
@@ -116,6 +119,7 @@ class YoukuUpload(object):
 
         params['client_id'] = self.client_id
         params['access_token'] = self.access_token
+        params['panorama'] = self.panorama
 
         url = 'https://openapi.youku.com/v2/uploads/create.json'
         r = requests.get(url, params=params)
