@@ -51,11 +51,19 @@ def youku_task(youku_conf, youku_upload, local_key_name):
     """
     Upload local file to Youku with Youku SDK
     """
+    print youku_conf
+    print youku_upload
+    print local_key_name
+
     youku = YoukuUpload(youku_conf["clientid"], youku_conf["ak"], local_key_name)
     try:
         YOUKU_SUCCESS = {
             "code": "200",
-            "info": "upload success"
+            "msg": "upload success",
+            "data": {
+                "callbackurl": youku_conf["callbackurl"],
+                "key": local_key_name
+            }
         }
         youku.upload(youku_upload)
         remove_tmp(local_key_name)
@@ -78,13 +86,11 @@ def task_listener_upload(gearman_worker, gearman_job):
     data_json = json.loads(gearman_job.data)
 
     # Conf info for youku
-    youku_conf = {}
-    youku_conf["clientid"] = data_json.get("clientid")
-    youku_conf["ak"] = data_json.get("ak")
+    youku_conf = data_json.get("conf")
     youku_upload = data_json.get("youku")
 
-    # Download key_name for oss                
-    key_name = data_json.get("keyname")  # bucket object key name
+    # bucket object key name
+    key_name = youku_conf.get("keyname")
 
     # Conf oss & download file  
     remote_key_name = 'user/dee/' + key_name
