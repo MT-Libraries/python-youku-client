@@ -58,7 +58,7 @@ def youku_task(youku_conf, youku_upload, local_key_name):
     youku = YoukuUpload(youku_conf["clientid"], youku_conf["ak"], local_key_name)
     try:
         video_id = youku.upload(youku_upload)
-        YOUKU_SUCCESS = {
+        success = {
             "code": "200",
             "msg": "upload success",
             "data": {
@@ -68,15 +68,20 @@ def youku_task(youku_conf, youku_upload, local_key_name):
             }
         }
         remove_tmp(local_key_name)
-        return YOUKU_SUCCESS
+        return success
 
     except YoukuError, e:
-        YOUKU_ERROR = {
+        failure = {
             "code": "500",
-            "msg": str(e)
+            "msg": str(e),
+            "data": {
+                "callbackurl": youku_conf["callbackurl"],
+                "key": local_key_name
+            }
         }
-        print YOUKU_ERROR
-        return YOUKU_ERROR
+        remove_tmp(local_key_name)
+        print failure
+        return failure
 
 
 def task_listener_upload(gearman_worker, gearman_job):
@@ -101,12 +106,21 @@ def task_listener_upload(gearman_worker, gearman_job):
     oss_sdk = aliyun_oss.OSS(oss_conf.ak, oss_conf.sk, oss_conf.endpoint, oss_conf.bucket)
     result_oss = oss_sdk.download(remote_key_name, local_key_name)
 
-    if result_oss['code'] == "404":
-        print result_oss["msg"]
-        return json.dumps(result_oss, indent=4)
-    else:
+    if result_oss:
         result_youku = youku_task(youku_conf, youku_upload, local_key_name)
         return json.dumps(result_youku, indent=4)
+    else:
+        failure = {
+            "code": "404",
+            "msg": "oss key not found",
+            "data": {
+                "callbackurl": youku_conf["callbackurl"],
+                "key": local_key_name
+            }
+        }
+        remove_tmp(local_key_name)
+        print failure
+        return json.dumps(failure, indent=4)
 
 
 # init gm_worker
