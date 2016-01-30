@@ -112,3 +112,6 @@ package.json
 conf/conf_gearman.py
 conf/conf_oss.py
 conf/conf_youku.py
+
+# Test
+worker-test.py

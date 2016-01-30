@@ -4,6 +4,10 @@ python版本优酷客户端 & Gearman Worker
 
 基于Gearman的任务队列Worker,负责接收到任务后下载阿里云OSS文件并上传到使用优酷SDK来上传视频到优酷
 
+## Change
+
+- 2016.01.30 考虑到socket服务器上client重启无法拿到回调信息,在worker做回调.
+
 ## Required
 
 - Gearman
